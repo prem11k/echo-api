@@ -10,4 +10,4 @@ RUN cd /app/echo-api/main && go build -o /echo-api
 
 EXPOSE 3000
 
-ENTRYPOINT [ "/app/echo-api/main/echo-api" ]
+ENTRYPOINT [ "/app/echo-api/main" ]
