@@ -4,7 +4,7 @@ RUN mkdir /build
 WORKDIR /build
 
 RUN export GO111MODULE=auto
-RUN go get github.com/prem11k/echo-api/tree/main/src
+RUN go get github.com/prem11k/echo-api/main
 RUN cd /build && git clone https://github.com/prem11k/echo-api.git
 
 RUN cd /build/echo-api/main && go build
