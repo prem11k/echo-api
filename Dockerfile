@@ -1,9 +1,14 @@
-FROM golang:1.20-bullseye
+FROM golang:latest
 
-ENV APP_HOME /go/src/echo-api
-RUN mkdir -p "${APP_HOME}"
+RUN mkdir /build
+WORKDIR /build
 
-WORKDIR "${APP_HOME}"
+RUN export GO111MODULE=on
+RUN go get github.com/prem11k/echo-api/src
+RUN cd /build && git clone https://github.com/prem11k/echo-api.git
+
+RUN cd /build/echo-api/main && go build
+
 EXPOSE 3000
 
-CMD ["run"]
+ENTRYPOINT [ "/build/echo-api/src/main" ]
