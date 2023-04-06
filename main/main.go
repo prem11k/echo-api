@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
 func main() {
@@ -24,8 +26,18 @@ func handleQuery(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	headers := make(map[string][]string)
+	clientName := ""
 	for key, values := range w.Header() {
 		headers[key] = values
+
+		if strings.Contains(key, "Ssl-Client-Subject-Dn") {
+			re := regexp.MustCompile(`CN=([^,]+)`)
+			match := re.FindStringSubmatch(values[0])
+			fmt.Println(match)
+			if len(match) >= 2 {
+				clientName = match[1]
+			}
+		}
 	}
 
 	response := struct {
@@ -33,7 +45,7 @@ func handleQuery(w http.ResponseWriter, r *http.Request) {
 		Message string              `json:"message"`
 	}{
 		Headers: headers,
-		Message: "Hello, World!",
+		Message: fmt.Sprintf("Hello, %s!", clientName),
 	}
 
 	jsonResponse, err := json.MarshalIndent(response, "", "  ")
